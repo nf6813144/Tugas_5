@@ -1,20 +1,36 @@
-stack=[]
+stack = []
+undo_stack = []  
+redo_stack = []  
 
-#push elemen ke stack
 stack.append(10)
+undo_stack.append(('push', 10))
 stack.append(20)
+undo_stack.append(('push', 20))
 stack.append(30)
-print("stack setelah push: ", stack)
+undo_stack.append(('push', 30))
+print("Stack setelah push:", stack)
 
-elemen=stack.pop()
-print("elemen yang di pop pertama:", elemen)
-print("stack setelah pop kedua :", stack)
+elemen = stack.pop()
+undo_stack.append(('pop', elemen))
+print("Elemen yang di-pop pertama:", elemen)
+print("Stack setelah pop pertama:", stack)
 
-elemen=stack.pop()
-print("elemen yang di pop kedua:", elemen)
-print("stack setelah pop:", stack)
+if undo_stack:
+    action, elemen = undo_stack.pop()
+    if action == 'push':
+        stack.pop()  
+    elif action == 'pop':
+        stack.append(elemen)  
+    redo_stack.append((action, elemen))
+    print("Stack setelah undo:", stack)
 
-if stack:
-    print("elemen teratas:", stack[-1])
-else:
-    print("stack kosong")
+if redo_stack:
+    action, elemen = redo_stack.pop()
+    if action == 'push':
+        stack.append(elemen) 
+    elif action == 'pop':
+        stack.pop() 
+    undo_stack.append((action, elemen))
+    print("Stack setelah redo:", stack)
+
+print("Stack akhir:", stack)
